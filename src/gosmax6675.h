@@ -5,9 +5,11 @@
 
 #include <SPI.h>
 
-#define SPI_CLOCK_MAX_6675         1000000 /* (1MHz) */
+#define SPI_CLOCK_MAX_6675          125000 /* (125 kHz) */
 #define SPI_MODE_MAX_6675        SPI_MODE1
 #define SPI_BIT_ORDER_MAX_6675    MSBFIRST
+
+#define DELAY_MAX_6675_AFTER_EN      10000 /* Microseconds */
 
 namespace gos {
 class Max6675 {
@@ -19,8 +21,11 @@ public:
     const uint8_t&  mode = SPI_MODE_MAX_6675);        /* MAX6677 works in MODE1 (or MODE3?) */
   void initialize();
   bool read(double& value);
-#ifndef SPI_NO_ERROR_HANDLING_MAX_6675
   const char* error(uint8_t& length);
+#ifdef GOS_MAX_6675_DIAGNOSTIC
+  inline uint16_t diagnostic() {
+    return raw_;
+  }
 #endif
 private:
   uint8_t pincs_;

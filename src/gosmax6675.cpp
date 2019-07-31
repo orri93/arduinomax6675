@@ -3,7 +3,7 @@
 #include "gosmax6675.h"
 
 #define MAX_6675_ERROR_COUNT  1
-#define MAX_6675_ERROR_LENGTH 9 /* 8 character plus '\0' */
+#define MAX_6675_ERROR_LENGTH 5 /* 4 character plus '\0' */
 
 #define GOS_MAX_6675_ERRT_OPEN "OPEN"
 
@@ -25,6 +25,10 @@ void Max6675::initialize() {
 bool Max6675::read(double& value) {
   SPI.beginTransaction(spisettings_);
   digitalWrite(pincs_, LOW);
+    // CSB Fall to Output Enable
+#ifdef DELAY_MAX_6675_AFTER_EN
+  delayMicroseconds(DELAY_MAX_6675_AFTER_EN);
+#endif
 #ifndef SPI_NOT_USE_16_MAX_6675
   raw_ = SPI.transfer16(0x0000);
 #else
@@ -42,7 +46,6 @@ bool Max6675::read(double& value) {
   }
 }
 
-#ifndef SPI_NO_ERROR_HANDLING_MAX_6675
 const char* Max6675::error(uint8_t& length) {
   if (raw_ & 0x0004) {
     length = sizeof(GOS_MAX_6675_ERRT_OPEN);
@@ -52,6 +55,5 @@ const char* Max6675::error(uint8_t& length) {
     return nullptr;
   }
 }
-#endif
 
 }
