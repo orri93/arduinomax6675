@@ -2,9 +2,6 @@
 
 #include "gosmax6675.h"
 
-#define MAX_6675_ERROR_COUNT  1
-#define MAX_6675_ERROR_LENGTH 5 /* 4 character plus '\0' */
-
 #define GOS_MAX_6675_ERRT_OPEN "OPEN"
 
 namespace gos {
